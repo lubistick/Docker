@@ -29,7 +29,7 @@
 - `alpine`
 - `alpine/git`
 
-Названия образов на DockerHub имеет структуру `vendor/package`.
+Названия образов на DockerHub имеет структуру `<vendor>/<package>`.
 Смотрим первый результат `alpinelinux` - это `vendor`, а `docker-cli` - это `package`. Нам такое не подходит.
 Обоссать и на мороз (с).
 
@@ -44,7 +44,118 @@
 
 ## Команды Docker cli
 
-... (дописать)
+Можно пользоваться GUI версией Docker Desktop.
+Но я буду использовать консоль.
+Вспомним основные команды Docker cli.
+
+Откроем консоль и напишем:
+```sh
+docker --help
+```
+
+Это справка. К любой программе в Linux можно написать `<program> --help` и получить справку. Или `<program> <command> --help` для справки по конкретной команде программы. Например, `docker run --help`.
+
+Посмотрим список образов:
+```sh
+docker images
+
+REPOSITORY   TAG         IMAGE ID       CREATED        SIZE
+postgres     14-alpine   7f76e70684c3   6 months ago   239MB
+```
+ 
+На примере образа Postgres:
+- `REPOSITORY` - название образа (postgres)
+- `TAG` - версия (14-alpine)
+- `IMAGE ID` - ID образа, по которому его можно найти командами Docker (7f76e70684c3)
+- `CREATED` - когда создан (6 months ago)
+- `SIZE` - сколько занимает памяти на диске (239MB)
+
+Скачаем из реестра образ Linux alpine:
+
+```sh
+docker pull alpine:3.21.0
+
+3.21.0: Pulling from library/alpine
+38a8310d387e: Already exists 
+Digest: sha256:21dc6063fd678b478f57c0e13f47560d0ea4eeba26dfc947b2a4f81f686b9f45
+Status: Downloaded newer image for alpine:3.21.0
+docker.io/library/alpine:3.21.0
+
+What's Next?
+  View a summary of image vulnerabilities and recommendations → docker scout quickview alpine:3.21.0
+```
+
+Посмотрим список образов:
+
+```sh
+docker images
+
+REPOSITORY   TAG         IMAGE ID       CREATED        SIZE
+alpine       3.21.0      4048db5d3672   2 weeks ago    7.84MB
+postgres     14-alpine   7f76e70684c3   6 months ago   239MB
+```
+
+Обратите внимание, как мало весит Linux alpine (7.84MB).
+
+Создадим контейнер из образа и запустим его:
+
+```sh
+docker run alpine:3.21.0
+```
+
+Хмм.. не запустилось. Посмотрим контейнеры:
+```sh
+docker ps
+
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+```
+
+Ни одного контейнера. Посмотрим все контейнеры, включая остановленные:
+
+```sh
+CONTAINER ID   IMAGE           COMMAND     CREATED              STATUS                          PORTS     NAMES
+db02305c0ddb   alpine:3.21.0   "/bin/sh"   About a minute ago   Exited (0) About a minute ago             elastic_golick
+```
+
+Что выдала команда:
+- `CONTAINER ID` - ID контейнера, по которому его можно найти командами Docker (db02305c0ddb)
+- `IMAGE` - образ, из которого создан контейнер (alpine:3.21.0)
+- `COMMAND` - ...
+- `CREATED` - когда создан контейнер (About a minute ago)
+- `STATUS` - статус (Exited (0) About a minute ago)
+- `PORTS` - какие порты открыты внутри и снаружи контейнера (никакие)
+- `NAMES` - название контейнера, как альтернатива айдишнику (elastic_golick)
+
+Получается контейнер запущен и тут же остановлен.
+Чтобы контейнер не останавливался, нужно чтобы в нем работал какой-либо процесс.
+
+Создадим и запустим контейнер командой `run`
+с дополнительными флагами `-i` (интерактивный режим) и `-t` (режим псевдо-TTY):
+
+```sh
+docker run -i -t alpine:3.21.0 sh
+
+/ #
+```
+
+Теперь контейнер работает и мы внутри Lunux apline.
+Посмотрим процессы внутри контейнера:
+```sh
+/ # ps
+
+PID   USER     TIME  COMMAND
+    1 root      0:00 sh
+    7 root      0:00 ps
+```
+
+Результат выполнения команды на примере sh:
+- `PID` - ID процесса в ОС Linux (1)
+- `USER` - пользователь, запустивший процесс (root)
+- `TIME` - ...
+- `COMMAND` - запущенная команда (sh)
+
+
+В контейнере постоянно работает процесс sh, поэтому контейнер не завершает работу. Отлично!
 
 
 ## Linux alpine
