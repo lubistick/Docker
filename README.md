@@ -23,6 +23,8 @@
 
 ## Реестр образов
 
+[меню](#цель-проекта)
+
 Образ alpine будем искать в официальном реестре Docker.
 Заходим на [DockerHub](https://hub.docker.com) и ищем образ `linux alpine`.
 
@@ -48,6 +50,8 @@
 
 
 ## Команды Docker cli
+
+[меню](#цель-проекта)
 
 Можно пользоваться GUI версией Docker Desktop.
 Но я буду использовать консоль.
@@ -175,11 +179,14 @@ PID   USER     TIME  COMMAND
 
 ## Linux alpine
 
+[меню](#цель-проекта)
 
 ОС [Linux alpine](https://alpinelinux.org) настолько маленькая, что ее даже пишут с маленькой буквы.
 
 
 ### Пакетный менеджер apk
+
+[меню](#цель-проекта)
 
 Пакетный менеджер для alpine - это [apk](https://wiki.alpinelinux.org/wiki/Alpine_Package_Keeper).
 Посмотрим, что он умеет:
@@ -217,6 +224,8 @@ OK: 25391 distinct packages available
 
 
 ### Установка php
+
+[меню](#цель-проекта)
 
 Поищем `php`:
 
@@ -298,10 +307,12 @@ Zend Engine v4.4.2, Copyright (c) Zend Technologies
 
 ### Установка composer
 
-Установим [composer](https://getcomposer.org) - пакетный менеджер для php.
-Переходим в раздел [Download](https://getcomposer.org/download) и видим заголовок "Command-line installation".
+[меню](#цель-проекта)
 
-Выполним команду php `copy`, чтобы скопировать установшик composer:
+Установим [Composer](https://getcomposer.org) - пакетный менеджер для php.
+Переходим в раздел [Download Composer](https://getcomposer.org/download) и видим заголовок "Command-line installation".
+
+Выполним команду php `copy`, чтобы скопировать установшик Composer:
 
 ```sh
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
@@ -321,6 +332,8 @@ php -r "unlink('composer-setup.php');"
 
 
 ## Чем Docker отличается от виртуальной машины
+
+[меню](#цель-проекта)
 
 Как я запускаю Docker:
 - На Windows 10 установлены WSL 2 и Docker Desktop 4.29.0
