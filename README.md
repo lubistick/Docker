@@ -7,11 +7,14 @@
 ## Цель проекта
 
 Мы поговорим про:
-
 - [Реестр образов](#реестр-образов)
 - [Основных командах Docker](#команды-docker-cli)
-- [Об операционной системе](#linux-alpine)
-- 
+- [Об операционной системе Linux alpine](#linux-alpine)
+    - [Пакетный менеджер apk](#пакетный-менеджер-apk)
+    - [Установку php](#установка-php)
+    - [Установку composer](#установка-composer)
+- Основных командах Dockerfile
+- Утилите docker-compose
 - Чем Docker отличается от виртуальной машины
 - Запустим Laravel в Docker
 
@@ -24,14 +27,12 @@
 Заходим на [DockerHub](https://hub.docker.com) и ищем образ `linux alpine`.
 
 В результатах поиска мы увидим:
-
 - `alpinelinux/docker-cli`
 - `alpine`
 - `alpine/git`
 
 Названия образов на DockerHub имеет структуру `<vendor>/<package>`.
 Смотрим первый результат:
-
 - `alpinelinux` - это `<vendor>` или команда разработчиков
 - `docker-cli` - это `<package>` собственно пакет
 
@@ -57,7 +58,10 @@
 docker --help
 ```
 
-Это справка. К любой программе в Linux можно написать `<program> --help` и получить справку. Или `<program> <command> --help` для справки по конкретной команде программы. Например, `docker run --help`.
+Это справка.
+К любой программе в Linux можно написать `<program> --help` и получить справку.
+Или `<program> <command> --help` для справки по конкретной команде программы.
+Например, `docker run --help`.
 
 Посмотрим список образов:
 ```sh
@@ -135,9 +139,7 @@ db02305c0ddb   alpine:3.21.0   "/bin/sh"   About a minute ago   Exited (0) About
 Получается контейнер запущен и тут же остановлен.
 Чтобы контейнер не останавливался, нужно чтобы в нем работал какой-либо процесс.
 
-Создадим и запустим контейнер командой `run`
-с дополнительными флагами `-i` (интерактивный режим), `-t` (режим псевдо-TTY)
-и `--rm` (автоматически удалить контейнер после остановки):
+Напишем такую команду:
 
 ```sh
 docker run -i -t -rm alpine:3.21.0 sh
@@ -145,8 +147,14 @@ docker run -i -t -rm alpine:3.21.0 sh
 / #
 ```
 
+Мы только что создали и запустили контейнер командой `run` с дополнительными флагами:
+- `-i` - интерактивный режим
+- `-t` - режим псевдо-TTY
+- `--rm` - автоматически удалить контейнер после остановки
+
 Приглашение в консоли поменялось, мы внутри Lunux apline.
 Посмотрим процессы внутри контейнера:
+
 ```sh
 / # ps
 
@@ -290,7 +298,22 @@ Zend Engine v4.4.2, Copyright (c) Zend Technologies
 
 ### Установка composer
 
-Установим пакетный менеджер для php - composer.
+Установим [composer](https://getcomposer.org) - пакетный менеджер для php.
+Переходим в раздел [Download](https://getcomposer.org/download) и видим заголовок "Command-line installation".
+
+Выполним команду php `copy`, чтобы скопировать установшик composer:
+
+```sh
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+```
+
+```sh
+php composer-setup.php
+```
+
+```sh
+php -r "unlink('composer-setup.php');"
+```
 
 ```sh
 дописать
@@ -299,8 +322,8 @@ Zend Engine v4.4.2, Copyright (c) Zend Technologies
 
 ## Чем Docker отличается от виртуальной машины
 
-- Я пользуюсь Windows 10
-- На Windows установлен WSL 2 и Docker Desktop 4.29.0
+Как я запускаю Docker:
+- На Windows 10 установлены WSL 2 и Docker Desktop 4.29.0
 - Внутри WSL установлена Ubuntu 22.04.3 LTS
 
 Зачем такие сложности?
