@@ -13,8 +13,10 @@
     - [Пакетный менеджер apk](#пакетный-менеджер-apk)
     - [Установку php](#установка-php)
     - [Установку composer](#установка-composer)
+    - Установку Laravel
 - Основных командах Dockerfile
 - Утилите docker-compose
+- Cервер Nginx
 - Чем Docker отличается от виртуальной машины
 - Запустим Laravel в Docker
 
@@ -25,8 +27,9 @@
 
 [меню](#цель-проекта)
 
+Обычно образы собирают на базе alpine.
 Образ alpine будем искать в официальном реестре Docker.
-Заходим на [DockerHub](https://hub.docker.com) и ищем образ `linux alpine`.
+Заходим на [DockerHub](https://hub.docker.com) и ищем `linux alpine`.
 
 В результатах поиска мы увидим:
 - `alpinelinux/docker-cli`
