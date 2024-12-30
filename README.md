@@ -1,7 +1,7 @@
 # Docker Compendium
 
 Это про [Docker](https://www.docker.com).
-Мы запустим [Laravel](https://laravel.com) с помощью Docker с кое-какими инструментами для Backend разработки.
+Мы запустим php framework [Laravel](https://laravel.com) с помощью Docker с кое-какими инструментами для Backend разработки.
 
 
 ## Цель проекта
@@ -16,6 +16,7 @@
     - Установку Laravel
 - Основных командах Dockerfile
 - Утилите docker-compose
+- Базу данных Postgres
 - Cервер Nginx
 - Чем Docker отличается от виртуальной машины
 - Запустим Laravel в Docker
@@ -27,8 +28,8 @@
 
 [меню](#цель-проекта)
 
-Обычно образы собирают на базе alpine.
-Образ alpine будем искать в официальном реестре Docker.
+Обычно свои образы собирают на базе образа "alpine".
+Поищем в официальном реестре Docker.
 Заходим на [DockerHub](https://hub.docker.com) и ищем `linux alpine`.
 
 В результатах поиска мы увидим:
@@ -149,7 +150,7 @@ db02305c0ddb   alpine:3.21.0   "/bin/sh"   About a minute ago   Exited (0) About
 Напишем такую команду:
 
 ```sh
-docker run -i -t -rm alpine:3.21.0 sh
+docker run -i -t --rm alpine:3.21.0 sh
 
 / #
 ```
@@ -163,7 +164,7 @@ docker run -i -t -rm alpine:3.21.0 sh
 Посмотрим процессы внутри контейнера:
 
 ```sh
-/ # ps
+ps
 
 PID   USER     TIME  COMMAND
     1 root      0:00 sh
@@ -314,16 +315,89 @@ Zend Engine v4.4.2, Copyright (c) Zend Technologies
 
 Установим [Composer](https://getcomposer.org) - пакетный менеджер для php.
 Переходим в раздел [Download Composer](https://getcomposer.org/download) и видим заголовок "Command-line installation".
+Введем предложенные команды для установки:
 
-Выполним команду php `copy`, чтобы скопировать установшик Composer:
+```sh
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+
+PHP Warning:  copy(): Unable to find the wrapper "https" - did you forget to enable it when you configured PHP? in Command line code on line 1
+PHP Warning:  copy(): Unable to find the wrapper "https" - did you forget to enable it when you configured PHP? in Command line code on line 1
+PHP Warning:  copy(): Unable to find the wrapper "https" - did you forget to enable it when you configured PHP? in Command line code on line 1
+PHP Warning:  copy(https://getcomposer.org/installer): Failed to open stream: No such file or directory in Command line code on line 1
+```
+
+Хмм... PHP Warning...
+
+Пишет: "Не найти обертку для https, наверно вы забыли ее включить, когда конфигурировали php".
+Подозреваю, что речь идет про Curl, т.к. мы ходим по http с помощью него. Поищем:
+
+```sh
+apk search php84 | grep curl
+
+php84-curl-8.4.2-r0
+```
+
+Ставим php curl:
+
+```sh
+apk add php84-curl
+
+(1/9) Installing brotli-libs (1.1.0-r2)
+(2/9) Installing c-ares (1.34.3-r0)
+(3/9) Installing libunistring (1.2-r0)
+(4/9) Installing libidn2 (2.3.7-r0)
+(5/9) Installing nghttp2-libs (1.64.0-r0)
+(6/9) Installing libpsl (0.21.5-r3)
+(7/9) Installing zstd-libs (1.5.6-r2)
+(8/9) Installing libcurl (8.11.1-r0)
+(9/9) Installing php84-curl (8.4.2-r0)
+OK: 22 MiB in 33 packages
+```
+
+Но Curl - это всего лишь базовый протокол http, а нам нужен безопасный протокол https.
+Также это называется SSL, ищем:
+
+```sh
+apk search php84 | grep ssl
+
+php84-openssl-8.4.2-r0
+```
+
+Ставим php openssl:
+
+```sh
+apk add php84-openssl
+
+(1/1) Installing php84-openssl (8.4.2-r0)
+OK: 22 MiB in 34 packages
+```
+
+Пробуем установить composer:
 
 ```sh
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 ```
 
+Без ошибок. Делаем дальше:
+
 ```sh
 php composer-setup.php
+
+Some settings on your machine make Composer unable to work properly.
+Make sure that you fix the issues listed below and run this script again:
+
+The phar extension is missing.
+Install it or recompile php without --disable-phar
+
+The iconv OR mbstring extension is required and both are missing.
+Install either of them or recompile php without --disable-iconv
 ```
+
+Хмм... Ошибки...
+
+
+
+
 
 ```sh
 php -r "unlink('composer-setup.php');"
@@ -331,6 +405,7 @@ php -r "unlink('composer-setup.php');"
 
 ```sh
 дописать
+Выполним команду php `copy`, чтобы скопировать установшик Composer:
 ```
 
 
