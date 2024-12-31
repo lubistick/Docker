@@ -13,7 +13,7 @@
     - [Пакетный менеджер apk](#пакетный-менеджер-apk)
     - [Установку php](#установка-php)
     - [Установку composer](#установка-composer)
-    - Установку Laravel
+    - [Установку Laravel](#установка-laravel)
 - Основных командах Dockerfile
 - Утилите docker-compose
 - Базу данных Postgres
@@ -309,13 +309,15 @@ Zend Engine v4.4.2, Copyright (c) Zend Technologies
 Отлично мы поставили php внутри Docker контейнера с Linux alpine!
 
 
-### Установка composer
+### Установка Composer
 
 [меню](#цель-проекта)
 
 Установим [Composer](https://getcomposer.org) - пакетный менеджер для php.
 Переходим в раздел [Download Composer](https://getcomposer.org/download) и видим заголовок "Command-line installation".
-Введем предложенные команды для установки:
+Введем предложенные команды для установки.
+
+Команда `php` с флагом `-r` запустит php код, написанный в кавычках, а именно скачает установщик Composer:
 
 ```sh
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
@@ -442,7 +444,7 @@ Composer (version 2.8.4) successfully installed to: //composer.phar
 Use it: php composer.phar
 ```
 
-Отлично! Мы установили Composer:
+Отлично, мы установили Composer! Проверим:
 
 ```sh
 php composer.phar
@@ -456,10 +458,119 @@ php composer.phar
 Composer version 2.8.4 2024-12-11 11:57:47
 ```
 
-Установщик больше не нужен:
+Установщик больше не нужен, удалим его:
 
 ```sh
 php -r "unlink('composer-setup.php');"
+```
+
+
+### Установка Laravel
+
+Итак заходим на официальный сайт [Laravel](https://laravel.com).
+Жмем "Get started", вообще жать эту кнопку на сайтах с незнакомыми технологиями - хорошая практика.
+Видим кнопку - жмем.
+
+Находим заголовок "Creating a Laravel Application".
+Ипользуем Composer, чтобы скачать установщик Laravel:
+
+```sh
+composer global require laravel/installer
+
+sh: composer: not found
+```
+
+Ах да, надо обращаться к Composer так:
+
+```sh
+php composer.phar global require laravel/installer
+```
+
+Пошла установка... Готово. Делаем дальше:
+
+```sh
+laravel new example-app
+
+sh: laravel: not found
+```
+
+Обратим внимание на вывод предыдущей команды для скачивания установщика.
+Первая строка вывода "Текущая директория изменена на /root/.composer".
+Посмотрим, что там:
+
+```sh
+ls -la /root/.composer/
+
+total 108
+drwxr-xr-x    4 root     root          4096 Dec 31 22:29 .
+drwx------    1 root     root          4096 Dec 31 22:14 ..
+-rw-r--r--    1 root     root            13 Dec 31 22:15 .htaccess
+drwxr-xr-x    4 root     root          4096 Dec 31 22:29 cache
+-rw-r--r--    1 root     root            64 Dec 31 22:29 composer.json
+-rw-r--r--    1 root     root         74101 Dec 31 22:29 composer.lock
+-rw-r--r--    1 root     root           799 Dec 31 22:14 keys.dev.pub
+-rw-r--r--    1 root     root           799 Dec 31 22:14 keys.tags.pub
+drwxr-xr-x   12 root     root          4096 Dec 31 22:29 vendor
+```
+
+Нашли папку vendor:
+
+```sh
+ls -la /root/.composer/vendor/
+
+total 52
+drwxr-xr-x   12 root     root          4096 Dec 31 22:29 .
+drwxr-xr-x    4 root     root          4096 Dec 31 22:29 ..
+-rw-r--r--    1 root     root           771 Dec 31 22:29 autoload.php
+drwxr-xr-x    2 root     root          4096 Dec 31 22:29 bin
+drwxr-xr-x    3 root     root          4096 Dec 31 22:29 carbonphp
+drwxr-xr-x    2 root     root          4096 Dec 31 22:29 composer
+drwxr-xr-x    3 root     root          4096 Dec 31 22:29 doctrine
+drwxr-xr-x    8 root     root          4096 Dec 31 22:29 illuminate
+drwxr-xr-x    4 root     root          4096 Dec 31 22:29 laravel
+drwxr-xr-x    3 root     root          4096 Dec 31 22:29 nesbot
+drwxr-xr-x    5 root     root          4096 Dec 31 22:29 psr
+drwxr-xr-x   16 root     root          4096 Dec 31 22:29 symfony
+drwxr-xr-x    3 root     root          4096 Dec 31 22:29 voku
+```
+
+Посмотрим, какие есть бинарники:
+
+```sh
+ls -l /root/.composer/vendor/bin/
+
+total 8
+-rwxr-xr-x    1 root     root          3330 Dec 31 22:29 carbon
+-rwxr-xr-x    1 root     root          3345 Dec 31 22:29 laravel
+```
+
+Вот и установщик Laravel.
+
+
+Todo:
+
+```sh
+/root/.composer/vendor/bin/laravel new example-app
+
+   _                               _
+  | |                             | |
+  | |     __ _ _ __ __ ___   _____| |
+  | |    / _` | '__/ _` \ \ / / _ \ |
+  | |___| (_| | | | (_| |\ V /  __/ |
+  |______\__,_|_|  \__,_| \_/ \___|_|
+
+
+In NewCommand.php line 179:
+                                                                                                  
+  The following PHP extensions are required but are not installed: ctype, session, and tokenizer
+```
+
+Не хватает расширений php: ctype, session и tokenizer.
+
+Todo:
+
+```sh
+todo
 ```
 
 
