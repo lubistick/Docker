@@ -329,33 +329,11 @@ PHP Warning:  copy(https://getcomposer.org/installer): Failed to open stream: No
 Хмм... PHP Warning...
 
 Пишет: "Не найти обертку для https, наверно вы забыли ее включить, когда конфигурировали php".
-Подозреваю, что речь идет про Curl, т.к. мы ходим по http с помощью него. Поищем:
+Подозреваю, что речь идет про Curl, т.к. мы ходим по http с помощью него.
+Как это решать? Или знать, или гуглить.
 
-```sh
-apk search php84 | grep curl
-
-php84-curl-8.4.2-r0
-```
-
-Ставим php curl:
-
-```sh
-apk add php84-curl
-
-(1/9) Installing brotli-libs (1.1.0-r2)
-(2/9) Installing c-ares (1.34.3-r0)
-(3/9) Installing libunistring (1.2-r0)
-(4/9) Installing libidn2 (2.3.7-r0)
-(5/9) Installing nghttp2-libs (1.64.0-r0)
-(6/9) Installing libpsl (0.21.5-r3)
-(7/9) Installing zstd-libs (1.5.6-r2)
-(8/9) Installing libcurl (8.11.1-r0)
-(9/9) Installing php84-curl (8.4.2-r0)
-OK: 22 MiB in 33 packages
-```
-
-Но Curl - это всего лишь базовый протокол http, а нам нужен безопасный протокол https.
-Также это называется SSL, ищем:
+Я знаю, что есть протоколы http и https, где "s" на конце означает "secure".
+По-другому его еще называют SSL. Поэтому вместо гугла, поищу в менеджере `apk`:
 
 ```sh
 apk search php84 | grep ssl
@@ -363,7 +341,7 @@ apk search php84 | grep ssl
 php84-openssl-8.4.2-r0
 ```
 
-Ставим php openssl:
+Отлично, ставим php openssl:
 
 ```sh
 apk add php84-openssl
@@ -393,20 +371,101 @@ The iconv OR mbstring extension is required and both are missing.
 Install either of them or recompile php without --disable-iconv
 ```
 
-Хмм... Ошибки...
+Все красно-желтое. Почитаем вывод команды выше:
+"Некоторые настройки на вашей машине мешают Composer работать правильно.
+Исправьте ощибки ниже и перезапустите скрипт заново":
+- Отсутствует расширение "phar".
+- Установите или расширение "iconv", или "mbstring", или установите оба расширения.
 
+Ищем "phar":
 
+```sh
+apk search php84 | grep phar
 
+php84-phar-8.4.2-r0
+```
 
+Установим:
+
+```sh
+apk add php84-phar
+
+(1/1) Installing php84-phar (8.4.2-r0)
+Executing busybox-1.37.0-r9.trigger
+OK: 18 MiB in 26 packages
+```
+
+Ищем "iconv":
+
+```sh
+apk search php84 | grep iconv
+
+php84-iconv-8.4.2-r0
+```
+
+Установим:
+
+```sh
+apk add php84-iconv
+
+(1/1) Installing php84-iconv (8.4.2-r0)
+OK: 18 MiB in 27 packages
+```
+
+Ищем "mbstring":
+
+```sh
+apk search php84 | grep mbstring
+
+php84-mbstring-8.4.2-r0
+```
+
+Установим:
+
+```sh
+apk add php84-mbstring
+
+(1/2) Installing oniguruma (6.9.9-r0)
+(2/2) Installing php84-mbstring (8.4.2-r0)
+OK: 20 MiB in 29 packages
+```
+
+И перезапускаем скрипт:
+
+```sh
+php composer-setup.php
+
+All settings correct for using Composer
+Downloading...
+
+Composer (version 2.8.4) successfully installed to: //composer.phar
+Use it: php composer.phar
+```
+
+Отлично! Мы установили Composer:
+
+```sh
+php composer.phar
+
+   ______
+  / ____/___  ____ ___  ____  ____  ________  _____
+ / /   / __ \/ __ `__ \/ __ \/ __ \/ ___/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ (__  )  __/ /
+\____/\____/_/ /_/ /_/ .___/\____/____/\___/_/
+                    /_/
+Composer version 2.8.4 2024-12-11 11:57:47
+```
+
+Установщик больше не нужен:
 
 ```sh
 php -r "unlink('composer-setup.php');"
 ```
 
-```sh
-дописать
-Выполним команду php `copy`, чтобы скопировать установшик Composer:
-```
+
+## Dockerfile
+
+... дописать
 
 
 ## Чем Docker отличается от виртуальной машины
