@@ -544,10 +544,7 @@ total 8
 -rwxr-xr-x    1 root     root          3345 Dec 31 22:29 laravel
 ```
 
-Вот и установщик Laravel.
-
-
-Todo:
+Вот и установщик Laravel. Запустим его:
 
 ```sh
 /root/.composer/vendor/bin/laravel new example-app
@@ -565,7 +562,96 @@ In NewCommand.php line 179:
   The following PHP extensions are required but are not installed: ctype, session, and tokenizer
 ```
 
-Не хватает расширений php: ctype, session и tokenizer.
+Не хватает php расширений: ctype, session и tokenizer.
+
+Ставим ctype:
+
+```sh
+apk add php84-ctype
+
+fetch https://dl-cdn.alpinelinux.org/alpine/v3.21/main/x86_64/APKINDEX.tar.gz
+fetch https://dl-cdn.alpinelinux.org/alpine/v3.21/community/x86_64/APKINDEX.tar.gz
+(1/1) Installing php84-ctype (8.4.2-r0)
+OK: 20 MiB in 30 packages
+```
+
+Ставим session:
+
+```sh
+apk add php84-session
+
+(1/1) Installing php84-session (8.4.2-r0)
+OK: 20 MiB in 31 packages
+```
+
+Ставим tokenizer:
+
+```sh
+apk add php84-tokenizer
+
+(1/1) Installing php84-tokenizer (8.4.2-r0)
+OK: 20 MiB in 32 packages
+```
+
+Запустим еще раз установщик:
+
+```sh
+
+/root/.composer/vendor/bin/laravel new example-app
+
+   _                               _
+  | |                             | |
+  | |     __ _ _ __ __ ___   _____| |
+  | |    / _` | '__/ _` \ \ / / _ \ |
+  | |___| (_| | | | (_| |\ V /  __/ |
+  |______\__,_|_|  \__,_| \_/ \___|_|
+
+
+ ┌ Would you like to install a starter kit? ────────────────────┐
+ │ › ● No starter kit                                           │
+ │   ○ Laravel Breeze                                           │
+ │   ○ Laravel Jetstream                                        │
+ └──────────────────────────────────────────────────────────────┘
+```
+
+Менюшка в консоли, как приятно. Установим:
+
+```sh
+/root/.composer/vendor/bin/laravel new example-app
+
+   _                               _
+  | |                             | |
+  | |     __ _ _ __ __ ___   _____| |
+  | |    / _` | '__/ _` \ \ / / _ \ |
+  | |___| (_| | | | (_| |\ V /  __/ |
+  |______\__,_|_|  \__,_| \_/ \___|_|
+
+
+ ┌ Would you like to install a starter kit? ────────────────────┐
+ │ No starter kit                                               │
+ └──────────────────────────────────────────────────────────────┘
+
+ ┌ Which testing framework do you prefer? ──────────────────────┐
+ │ Pest                                                         │
+ └──────────────────────────────────────────────────────────────┘
+
+sh: composer: not found
+```
+
+Ошибка. Сделаем alias для composer: //todo исправить
+
+```sh
+alias composer="php composer.phar"
+mv composer.phar /usr/local/bin/composer
+```
+
+не помогло
+
+Todo:
+
+```sh
+todo
+```
 
 Todo:
 
