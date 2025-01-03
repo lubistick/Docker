@@ -464,6 +464,26 @@ Composer version 2.8.4 2024-12-11 11:57:47
 php -r "unlink('composer-setup.php');"
 ```
 
+Чтобы удобнее вызывать Сomposer:
+
+```sh
+mv composer.phar /usr/local/bin/composer
+```
+
+Попробуем:
+
+```sh
+composer
+
+   ______
+  / ____/___  ____ ___  ____  ____  ________  _____
+ / /   / __ \/ __ `__ \/ __ \/ __ \/ ___/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ (__  )  __/ /
+\____/\____/_/ /_/ /_/ .___/\____/____/\___/_/
+                    /_/
+Composer version 2.8.4 2024-12-11 11:57:47
+```
+
 
 ### Установка Laravel
 
@@ -477,13 +497,23 @@ php -r "unlink('composer-setup.php');"
 ```sh
 composer global require laravel/installer
 
-sh: composer: not found
-```
+Changed current directory to /root/.composer
+./composer.json has been created
+Running composer update laravel/installer
+Loading composer repositories with package information
+Updating dependencies
+Lock file operations: 29 installs, 0 updates, 0 removals
+  - Locking carbonphp/carbon-doctrine-types (3.2.0)
 
-Ах да, надо обращаться к Composer так:
+...
 
-```sh
-php composer.phar global require laravel/installer
+  - Installing laravel/installer (v5.11.1): Extracting archive
+22 package suggestions were added by new dependencies, use `composer suggest` to see details.
+Generating autoload files
+18 packages you are using are looking for funding.
+Use the `composer fund` command to find out more!
+No security vulnerability advisories found.
+Using version ^5.11 for laravel/installer
 ```
 
 Пошла установка... Готово. Делаем дальше:
@@ -614,7 +644,38 @@ OK: 20 MiB in 32 packages
  └──────────────────────────────────────────────────────────────┘
 ```
 
-Менюшка в консоли, как приятно. Установим:
+Менюшка в консоли, как приятно. 
+Выбираем "No starter kit" и "PHPUnit".
+И получаем ошибки:
+- Problem 1 - отсутствует php расширение xml.
+- Problem 2 - отсутствует php расширение dom.
+
+
+Ищем xml:
+
+```sh
+apk search php84 | grep xml
+```
+
+Установим xml:
+
+```sh
+apk add php84-xml
+```
+
+Ищем dom:
+
+```sh
+apk search php84 | grep dom
+```
+
+Установим dom:
+
+```sh
+apk add php84-dom
+```
+
+Перезапустим установку:
 
 ```sh
 /root/.composer/vendor/bin/laravel new example-app
@@ -627,30 +688,37 @@ OK: 20 MiB in 32 packages
   |______\__,_|_|  \__,_| \_/ \___|_|
 
 
- ┌ Would you like to install a starter kit? ────────────────────┐
- │ No starter kit                                               │
- └──────────────────────────────────────────────────────────────┘
+In NewCommand.php line 826:
 
- ┌ Which testing framework do you prefer? ──────────────────────┐
- │ Pest                                                         │
- └──────────────────────────────────────────────────────────────┘
-
-sh: composer: not found
+  Application already exists!
 ```
 
-Ошибка. Сделаем alias для composer: //todo исправить
+Удалим мусор от предыдущего запуска:
 
 ```sh
-alias composer="php composer.phar"
-mv composer.phar /usr/local/bin/composer
+rm -rf example-app/
 ```
 
-не помогло
+Перезапустим установку:
+
+```sh
+/root/.composer/vendor/bin/laravel new example-app
+```
+
+
+
+
+
+
+
 
 Todo:
 
 ```sh
-todo
+apk add php84-xmlwriter
+
+apk search php84 | grep fileinfo
+apk add php84-fileinfo
 ```
 
 Todo:
