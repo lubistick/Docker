@@ -699,32 +699,59 @@ In NewCommand.php line 826:
 rm -rf example-app/
 ```
 
-Перезапустим установку:
+Перезапустим установку Laravel и получаем ошибку:
+- Problem 1 - отсутствует php расширение xmlwriter.
+
+Поставим xmlwriter:
+
+```sh
+apk add php84-xmlwriter
+```
+
+Перезапустим установку Laravel и получаем ошибку:
+- Problem 1 - отсутствует php расширение fileinfo.
+
+Поставим fileinfo:
+
+```sh
+apk add php84-fileinfo
+```
+
+Перезапустим установку Laravel:
 
 ```sh
 /root/.composer/vendor/bin/laravel new example-app
 ```
 
+Процесс пошел! Выбираем PostgreSQL.
 
-
-
-
-
-
-
-Todo:
+Поищем драйвер PDO для Postgres:
 
 ```sh
-apk add php84-xmlwriter
-
-apk search php84 | grep fileinfo
-apk add php84-fileinfo
+apk search php84 | grep pdo
 ```
 
-Todo:
+Ставим:
 
 ```sh
-todo
+apk add php84-pdo_pgsql
+
+(1/3) Installing php84-pdo (8.4.2-r0)
+(2/3) Installing libpq (17.2-r0)
+(3/3) Installing php84-pdo_pgsql (8.4.2-r0)
+OK: 37 MiB in 48 packages
+```
+
+Проверим Laravel:
+
+```sh
+cd example-app
+```
+
+```sh
+php artisan
+
+Laravel Framework 11.37.0
 ```
 
 
