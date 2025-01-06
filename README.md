@@ -755,7 +755,59 @@ Laravel Framework 11.37.0
 ```
 
 
-## Dockerfile
+## Собираем Docker образ
+
+
+### Dockerfile
+
+Теперь давайте все выполненные выше действия с alpine запишем в специальный файл - файл Dockerfile:
+
+```Dockerfile
+FROM alpine:3.21.0
+
+RUN apk upgrade && \
+    apk update && \
+    apk add php84 \
+        php84-ctype \
+        php84-dom \
+        php84-fileinfo \
+        php84-iconv \
+        php84-mbstring \
+        php84-openssl \
+        php84-pdo_pgsql \
+        php84-phar \
+        php84-session \
+        php84-tokenizer \
+        php84-xml \
+        php84-xmlwriter && \
+    ln -s /usr/bin/php84 /usr/bin/php && \
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    php composer-setup.php && \
+    php -r "unlink('composer-setup.php');" && \
+    mv composer.phar /usr/local/bin/composer
+
+    # composer global require laravel/installer
+    # /root/.composer/vendor/bin/laravel new example-app
+```
+
+Соберем образ из докерфайла:
+
+```sh
+docker build .
+```
+
+
+### Volume
+
+Volume - это постоянное хранилище для данных контейнера.
+
+Нам не нужен установщик Laravel внутри образа.
+
+docker volume prune
+docker volume ls
+
+
+
 
 ... дописать
 
