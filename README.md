@@ -1,20 +1,30 @@
 # Docker Compendium
 
-Это про [Docker](https://www.docker.com).
-Мы запустим php framework [Laravel](https://laravel.com) с помощью Docker с кое-какими инструментами для Backend разработки.
-
 
 ## Цель проекта
 
-Мы поговорим про:
+В конце компендиума получится следующий набор контейнеров:
+- бекенд на [Laravel](https://laravel.com) PHP Framework
+- кластер баз данных Postgres (ссылка)
+- обратный прокси-сервер Nginx (ссылка)
+- кеш Redis (ссылка)
+- хранилище S3
+
+
+## Предпосылки
+
+Подразумевается, что на локальной машине установлены [Docker](https://www.docker.com) и Git (ссылка).
+
+
+## Содержание
+
 - [Реестр образов](#реестр-образов)
-- [Основных командах Docker](#команды-docker-cli)
-- [Об операционной системе Linux alpine](#linux-alpine)
-    - [Пакетный менеджер apk](#пакетный-менеджер-apk)
-    - [Установку php](#установка-php)
-    - [Установку composer](#установка-composer)
-    - [Установку Laravel](#установка-laravel)
-- Основных командах Dockerfile
+- [Docker cli](#команды-docker-cli)
+- [Linux alpine](#linux-alpine)
+- [Установка PHP](#установка-php)
+- [Установка Composer](#установка-composer)
+- [Установка Laravel](#установка-laravel)
+- [Dockerfile](#dockerfile)
 - Утилите docker-compose
 - Базу данных Postgres
 - Cервер Nginx
@@ -26,11 +36,10 @@
 
 ## Реестр образов
 
-[меню](#цель-проекта)
+[Наверх ^](#цель-проекта)
 
-Обычно свои образы собирают на базе образа "alpine".
-Поищем в официальном реестре Docker.
-Заходим на [DockerHub](https://hub.docker.com) и ищем `linux alpine`.
+Обычно контейнеры с полезными сервисами поднимают на базе образа Alpine.
+Поищем "linux alpine" в официальном реестре [DockerHub](https://hub.docker.com).
 
 В результатах поиска мы увидим:
 - `alpinelinux/docker-cli`
@@ -38,24 +47,23 @@
 - `alpine/git`
 
 Названия образов на DockerHub имеет структуру `<vendor>/<package>`.
+
 Смотрим первый результат:
 - `alpinelinux` - это `<vendor>` или команда разработчиков
 - `docker-cli` - это `<package>` собственно пакет
 
 Нам такое не подходит.
 
-Смотрим следующий результат поиска - `alpine`.
 Названия образов на DockerHub имеет и другую структуру - просто `<package>` - значит,
-что пакет официальный. Отлично. То что надо!
+что пакет официальный. Второй результат - то, что надо!
 
 Итак, переходим в [alpine](https://hub.docker.com/_/alpine).
-Смотрим "Supported tags" - последняя версия alpine на момент написания гайда - `3.21.0`.
-Теперь мы знаем версию alpine, которую будем запускать в Docker.
+Смотрим "Supported tags" - последняя версия alpine на момент написания гайда - `3.21.0` - запомним.
 
 
 ## Команды Docker cli
 
-[меню](#цель-проекта)
+[Наверх ^](#цель-проекта)
 
 Можно пользоваться GUI версией Docker Desktop.
 Но я буду использовать консоль.
@@ -183,14 +191,9 @@ PID   USER     TIME  COMMAND
 
 ## Linux alpine
 
-[меню](#цель-проекта)
+[Наверх ^](#цель-проекта)
 
 ОС [Linux alpine](https://alpinelinux.org) настолько маленькая, что ее даже пишут с маленькой буквы.
-
-
-### Пакетный менеджер apk
-
-[меню](#цель-проекта)
 
 Пакетный менеджер для alpine - это [apk](https://wiki.alpinelinux.org/wiki/Alpine_Package_Keeper).
 Посмотрим, что он умеет:
@@ -227,9 +230,9 @@ OK: 25391 distinct packages available
 ```
 
 
-### Установка php
+## Установка PHP
 
-[меню](#цель-проекта)
+[Наверх ^](#цель-проекта)
 
 Поищем `php`:
 
@@ -309,9 +312,9 @@ Zend Engine v4.4.2, Copyright (c) Zend Technologies
 Отлично мы поставили php внутри Docker контейнера с Linux alpine!
 
 
-### Установка Composer
+## Установка Composer
 
-[меню](#цель-проекта)
+[Наверх ^](#цель-проекта)
 
 Установим [Composer](https://getcomposer.org) - пакетный менеджер для php.
 Переходим в раздел [Download Composer](https://getcomposer.org/download) и видим заголовок "Command-line installation".
@@ -485,7 +488,9 @@ Composer version 2.8.4 2024-12-11 11:57:47
 ```
 
 
-### Установка Laravel
+## Установка Laravel
+
+[Наверх ^](#цель-проекта)
 
 Итак заходим на официальный сайт [Laravel](https://laravel.com).
 Жмем "Get started", вообще жать эту кнопку на сайтах с незнакомыми технологиями - хорошая практика.
@@ -755,10 +760,9 @@ Laravel Framework 11.37.0
 ```
 
 
-## Собираем Docker образ
+## Dockerfile
 
-
-### Dockerfile
+[Наверх ^](#цель-проекта)
 
 Теперь давайте все выполненные выше действия с alpine запишем в специальный файл - файл Dockerfile:
 
@@ -789,6 +793,8 @@ RUN apk upgrade && \
     # composer global require laravel/installer
     # /root/.composer/vendor/bin/laravel new example-app
 ```
+
+описать from и run
 
 Соберем образ из докерфайла:
 
